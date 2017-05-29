@@ -1,0 +1,17 @@
+#N canvas 238 260 776 670 10;
+#X obj 279 20 inlet;
+#X obj 258 444 outlet;
+#X obj 26 22 table bass1L;
+#X obj 27 50 table bass1R;
+#X obj 38 119 table bass2L;
+#X obj 37 148 table bass2R;
+#X obj 44 190 table bass3L;
+#X obj 44 218 table bass3R;
+#X obj 45 253 table bass4L;
+#X obj 42 298 table bass4R;
+#X msg 347 30 list bass1L bass1R bass2L bass2R bass3L bass3R bass4L
+bass4R hatL hatR;
+#X obj 40 454 table hatL;
+#X obj 39 476 table hatR;
+#X connect 0 0 10 0;
+#X connect 10 0 1 0;
