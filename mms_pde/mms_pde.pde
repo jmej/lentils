@@ -18,13 +18,11 @@ PImage[][] colors = new PImage[6][3];
 PImage bg;
 int[] lentilSizes = {50, 100, 150}; //needs to be the 3 sizes of lentils in px
 
-int circlesToDraw = 0;
-
 Lentil[][] lentils = new Lentil[6][10]; //each sub array will get filled with lentil instances
 bgCircle[][] bgCircles = new bgCircle[6][10];
 
 boolean[] triggers = new boolean[6];
-boolean[] circleTriggers = new boolean[20];
+boolean[] circleTriggers = new boolean[32];
 
 int[] timers = new int[6];
 
@@ -35,7 +33,8 @@ int screenBlue = 10;
 
 long triggerTime = 0;
 long triggerTimer = 0;
-
+long beatCount = 0;
+long circlesToDraw = 0;
 long screenTimer = 0; //30 fps means %900 gives 30 seconds
 
 void setup (){
@@ -51,8 +50,11 @@ void setup (){
   for (int c = 0; c < 6; c++){ //setup each color
     
     for (int i = 0; i < lentils[c].length; i++){
-      lentils[c][i] = new Lentil(c, int((random(500)+300)), width, height, random(20), random(20));
-      bgCircles[c][i] = new bgCircle(c, int((random(500)+300)), width-500, height-500, random(10), random(10));
+      float circleSize = random(500)+500;
+      float circleX = random(circleSize, width-circleSize);
+      float circleY = random(circleSize, height-circleSize);
+      lentils[c][i] = new Lentil(c, int((random(500)+300)), width, height, randomlySignedFloat(5, 20), randomlySignedFloat(5, 20));
+      bgCircles[c][i] = new bgCircle(c, int(circleSize), circleX, circleY, randomlySignedFloat(2, 5),randomlySignedFloat(2, 5));
     }
     
     for (int i = 0; i < 3; i++){
@@ -86,7 +88,7 @@ public void podium(float arg) { //OSC triggers
    retrigLentils(5);
   }
   if (arg == 10.0){
-    circlesToDraw++;
+    beatCount++;
     triggerTimer = millis();
   }
 }
@@ -95,26 +97,58 @@ void draw (){
   background (screenRed,screenGreen,screenBlue); // Background color
   //background(bg);
   println("circles = "+circlesToDraw);
-  if (circlesToDraw > 5){
-    circlesToDraw = 5; //max background circles
-  }
-  if ((screenTimer % 300) == 0){ //change screen color every 30 seconds
-        int newScreenColor = int(random(5));
-        screenRed = screenColors[newScreenColor][0];
-        screenGreen = screenColors[newScreenColor][1];
-        screenBlue = screenColors[newScreenColor][2];
-  }
+  circlesToDraw = beatCount % 32; //draw up to 32 circles
+  //if (circlesToDraw > 16){
+  //  circlesToDraw = 8; //max background circles
+    
+  //  int newScreenColor = int(random(5)); //change the screen color every 4 bars of triggers
+  //  screenRed = screenColors[newScreenColor][0];
+  //  screenGreen = screenColors[newScreenColor][1];
+  //  screenBlue = screenColors[newScreenColor][2];
+  //}
   
-  for (int t = 0; t < circleTriggers.length; t++){ //NOT WORKING YET
-    if (circleTriggers[t]){
-      for (int c = 0; c < 6; c++){
-        for (int i = 0; i < bgCircles[c].length; i++){
-          bgCircles[c][i].move();
-          bgCircles[c][i].display();
-        }
+  if ((millis() - triggerTimer) > 4000){ //stop drawing circles if 4 seconds have passed since last trigger - but immediately draw 8
+    circlesToDraw = 0;
+    beatCount = 0;
+    for (int i = 0; i < circleTriggers.length; i++){ 
+      circleTriggers[i] = false;
+      if (i < 8){ //attract mode
+        int cColor = (i % 5)+1; //avoids yellow (assuming bg is yellow)
+        int cNum = i % 10;
+        bgCircles[cColor][cNum].move();
+        bgCircles[cColor][cNum].display();
       }
     }
   }
+
+    
+  for (int i = 0; i < circleTriggers.length; i++){ //setup a trigger for every increment that has happened
+    if (i < circlesToDraw){
+      circleTriggers[i] = true;
+    }
+  }
+  
+  if (circlesToDraw > 16){
+    for (int i=0; i < circlesToDraw-16; i++){
+      circleTriggers[i] = false; //stop drawing circles sequentially after 16 are on screen
+    }
+  }
+  
+  if (circlesToDraw < 16){
+    for (int i=0; i < circlesToDraw; i++){
+      circleTriggers[i+16] = false; //stop drawing circles above 16 sequentially
+    }
+  }
+  
+  for (int t = 0; t < circleTriggers.length; t++){
+    if (circleTriggers[t]){
+      int cColor = (t % 5)+1; //avoids yellow (assuming bg is yellow)
+      int cNum = t % 10;
+      bgCircles[cColor][cNum].move();
+      bgCircles[cColor][cNum].display();
+    }
+  }
+
   for (int t = 0; t < triggers.length; t++){
     if (triggers[t]){
       for (int i = 0; i < lentils[t].length; i++){
@@ -137,16 +171,29 @@ void draw (){
   
 }
 
+float randomlySignedFloat(float a, float b){
+  //takes an absolute value range and returns a float with a random sign
+  if (random(1) > 0.5){
+    return random(a, b)*1;
+  }
+  else {
+    return random(a, b)* (-1);
+  }
+}
+
 void retrigLentils(int lentilColor){
    triggers[lentilColor] = true;
-    float newX = random(width);
-    float newY = random(height);
+    float newX = random(lentilSizes[2], width - lentilSizes[2]); //random size 1 big lentil away from edges
+    float newY = random(lentilSizes[2], height - lentilSizes[2]);
+
     for (int i = 0; i < lentils[0].length; i++){
+      float newXspeed = randomlySignedFloat(5, 20);
+      float newYspeed = randomlySignedFloat(5, 20);
       lentils[lentilColor][i].lentilSize = int(random(3));
-      lentils[lentilColor][i].x = newX - lentilSizes[lentils[lentilColor][i].lentilSize]; //retrigger all the lentils
-      lentils[lentilColor][i].y = newY - lentilSizes[lentils[lentilColor][i].lentilSize];
-      lentils[lentilColor][i].xspeed = random(-30, 30); // how do we eliminate the low numbers - maybe using abs?
-      lentils[lentilColor][i].yspeed = random(-30, 30);
+      lentils[lentilColor][i].x = newX;
+      lentils[lentilColor][i].y = newY;
+      lentils[lentilColor][i].xspeed = newXspeed;
+      lentils[lentilColor][i].yspeed = newYspeed;
     }
     timers[lentilColor] = 0;
     //println("red trigger");
@@ -223,6 +270,7 @@ class bgCircle {
     yspeed = ysp;
     
   }
+  
   void move() {
     y += yspeed;
     x += xspeed;
