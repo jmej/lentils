@@ -1,4 +1,8 @@
 
+//make a circle appear with each lentil trigger and float around. maybe try genie (up) animation on the circle
+//try making the circles fade out before not being drawn anymore - maybe they're fading the whole time they're on screen
+//get pd patch triggers to reset the measure counter if the trigger comes in after the fade behavior is done
+
 import oscP5.*;
 import netP5.*;
 
@@ -44,7 +48,8 @@ void setup (){
   oscP5.plug(this,"podium","/podium");
   
   bg = loadImage("m_backgrounds1.jpg");
-  size (1920, 1080); // Size of background
+  fullScreen(1);
+  //size (1920, 1080); // Size of background
   background (249,194,10); // Background color
   
   for (int c = 0; c < 6; c++){ //setup each color
@@ -54,7 +59,8 @@ void setup (){
       float circleX = random(circleSize, width-circleSize);
       float circleY = random(circleSize, height-circleSize);
       lentils[c][i] = new Lentil(c, int((random(500)+300)), width, height, randomlySignedFloat(5, 20), randomlySignedFloat(5, 20));
-      bgCircles[c][i] = new bgCircle(c, int(circleSize), circleX, circleY, randomlySignedFloat(2, 5),randomlySignedFloat(2, 5));
+      bgCircles[c][i] = new bgCircle(c, int(circleSize), circleX, circleY, randomlySignedFloat(0.1, 2),randomlySignedFloat(0.1, 2));
+
     }
     
     for (int i = 0; i < 3; i++){
@@ -62,7 +68,7 @@ void setup (){
       colors[c][i] = loadImage(imageName);
     }
   }
-  frameRate(30);
+  frameRate(24);
 }
 
 public void podium(float arg) { //OSC triggers
@@ -119,6 +125,7 @@ void draw (){
         bgCircles[cColor][cNum].display();
       }
     }
+
   }
 
     
