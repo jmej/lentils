@@ -268,9 +268,16 @@ class BgCircle implements Comparable<BgCircle>{
     if (age < 400){ //~5 seconds
       noStroke();
       float alpha = map(age, 0, 200, 255, 0);
+      float currentSize = bgCircleSize;
+      if (age < 3){
+        currentSize = map(age, 0, 3, 0, bgCircleSize+(bgCircleSize/4)); //genie up
+      }
+      if (age > 3 && age < 8){
+        currentSize = map(age, 3, 8, bgCircleSize+(bgCircleSize/4), bgCircleSize); //genie down
+    }
       color c = color(screenColors[bgCircleColor][0], screenColors[bgCircleColor][1], screenColors[bgCircleColor][2]);
       fill(c, alpha);
-      ellipse (x, y, bgCircleSize, bgCircleSize);
+      ellipse (x, y, currentSize, currentSize);
       oldx = x; //log our last circle
       oldy = y;
       age++;
