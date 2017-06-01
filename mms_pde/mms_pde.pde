@@ -78,21 +78,27 @@ public void podium(float arg) { //OSC triggers
   
   if (arg == 0.0) {
    retrigLentils(0);
+   triggerTimer = millis();
   }
   if (arg == 1.0) {
    retrigLentils(1);
+   triggerTimer = millis();
   }
   if (arg == 2.0) {
    retrigLentils(2);
+   triggerTimer = millis();
   }
   if (arg == 3.0) {
    retrigLentils(3);
+   triggerTimer = millis();
   }
   if (arg == 4.0) {
    retrigLentils(4);
+   triggerTimer = millis();
   }
   if (arg == 5.0) {
    retrigLentils(5);
+   triggerTimer = millis();
   }
   if (arg == 10.0){
     beatCount++;
@@ -103,10 +109,21 @@ public void podium(float arg) { //OSC triggers
 void draw (){
   background (screenRed,screenGreen,screenBlue); // Background color
   
-  Arrays.sort(bgCircles);
+  Arrays.sort(bgCircles); // puts bgCircles into oldest to youngest order so newest circles get drawn on top
   
-
-  //can I sort the bgCircles objects by age? need to draw the youngest first
+  if (millis() - triggerTimer > 8000){ //if 5 seconds have passed since last trigger start attract mode
+    for (int i = 0; i < bgCircles.length; i++){
+      bgCircles[i].trigger = true;
+      if ((millis() - triggerTimer) < 15000){
+        float timeSinceTrig = int(millis() - triggerTimer);
+        bgCircles[i].age = int(map(timeSinceTrig, 8000, 15000, 180, 8)); //trick to fade circles back in
+      }else{
+      bgCircles[i].age = 8;
+      }
+      //triggerTimer = millis();
+    }
+    
+  }
   for (int i = 0; i < bgCircles.length; i++){
     if (bgCircles[i].trigger){
       bgCircles[i].move();
@@ -174,21 +191,27 @@ void retrigLentils(int lentilColor){
 void keyPressed() {
   if (key == 'q') {
    retrigLentils(0);
+   triggerTimer = millis();
   }
   if (key == 'w') {
    retrigLentils(1);
+   triggerTimer = millis();
   }
   if (key == 'e') {
    retrigLentils(2);
+   triggerTimer = millis();
   }
   if (key == 'r') {
    retrigLentils(3);
+   triggerTimer = millis();
   }
   if (key == 't') {
    retrigLentils(4);
+   triggerTimer = millis();
   }
   if (key == 'y') {
    retrigLentils(5);
+   triggerTimer = millis();
   }
   
 }
@@ -265,9 +288,9 @@ class BgCircle implements Comparable<BgCircle>{
     //if (age == 0){
     //  bgCircleColor = int(random(4))+1; //for random colors excluding yellow
     //}
-    if (age < 400){ //~5 seconds
+    if (age < 180){ //~5 seconds
       noStroke();
-      float alpha = map(age, 0, 200, 255, 0);
+      float alpha = map(age, 0, 180, 255, 0);
       float currentSize = bgCircleSize;
       if (age < 3){
         currentSize = map(age, 0, 3, 0, bgCircleSize+(bgCircleSize/4)); //genie up
