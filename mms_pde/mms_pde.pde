@@ -1,6 +1,4 @@
 import java.util.Arrays;
-//make a circle appear with each lentil trigger and float around. maybe try genie (up) animation on the circle
-//try making the circles fade out before not being drawn anymore - maybe they're fading the whole time they're on screen
 //get pd patch triggers to reset the measure counter if the trigger comes in after the fade behavior is done
 
 import oscP5.*;
