@@ -1,17 +1,73 @@
-#N canvas 238 260 776 670 10;
+#N canvas 0 27 776 670 10;
 #X obj 279 20 inlet;
 #X obj 258 444 outlet;
 #X obj 26 22 table bass1L;
 #X obj 27 50 table bass1R;
-#X obj 38 119 table bass2L;
-#X obj 37 148 table bass2R;
-#X obj 44 190 table bass3L;
-#X obj 44 218 table bass3R;
-#X obj 45 253 table bass4L;
-#X obj 42 298 table bass4R;
+#X obj 28 79 table bass2L;
+#X obj 27 108 table bass2R;
+#X obj 23 134 table bass3L;
+#X obj 23 162 table bass3R;
+#X obj 24 197 table bass4L;
+#X obj 23 224 table bass4R;
+#X obj 22 263 table hatL;
+#X obj 21 285 table hatR;
+#X obj 18 312 table chord1L;
+#X obj 19 333 table chord1R;
+#X obj 29 362 table chord2L;
+#X obj 30 383 table chord2R;
+#X obj 13 408 table chord3L;
+#X obj 14 429 table chord3R;
+#X obj 21 452 table chord4L;
+#X obj 22 473 table chord4R;
+#X obj 14 499 table cymbalL;
+#X obj 15 520 table cymbalR;
+#X obj 21 585 table hat2L;
+#X obj 22 606 table hat2R;
+#X obj 400 296 table hi_note1L;
+#X obj 401 317 table hi_note1R;
+#X obj 422 342 table hi_note2L;
+#X obj 423 363 table hi_note2R;
+#X obj 452 388 table hi_note3L;
+#X obj 453 409 table hi_note3R;
+#X obj 474 434 table hi_note4L;
+#X obj 475 455 table hi_note4R;
+#X obj 493 478 table hi_note5L;
+#X obj 494 499 table hi_note5R;
+#X obj 515 524 table hi_note6L;
+#X obj 516 545 table hi_note6R;
+#X obj 546 568 table hi_note7L;
+#X obj 547 589 table hi_note7R;
+#X obj 568 614 table hi_note8L;
+#X obj 569 635 table hi_note8R;
+#X obj 515 242 table hit1L;
+#X obj 516 263 table hit1R;
+#X obj 537 288 table hit2L;
+#X obj 538 309 table hit2R;
+#X obj 567 334 table kickL;
+#X obj 568 355 table kickR;
+#X obj 169 492 table low_note1L;
+#X obj 186 558 table low_note2R;
+#X obj 288 491 table low_note3L;
+#X obj 289 512 table low_note3R;
+#X obj 304 536 table low_note4L;
+#X obj 305 557 table low_note4R;
+#X obj 170 513 table low_note1R;
+#X obj 185 537 table low_note2L;
+#X obj 156 240 table melodyL;
+#X obj 157 261 table melodyR;
+#X obj 155 306 table snareL;
+#X obj 156 327 table snareR;
+#X obj 151 366 table snareRushL;
+#X obj 152 387 table snareRushR;
 #X msg 347 30 list bass1L bass1R bass2L bass2R bass3L bass3R bass4L
-bass4R hatL hatR;
-#X obj 40 454 table hatL;
-#X obj 39 476 table hatR;
-#X connect 0 0 10 0;
-#X connect 10 0 1 0;
+bass4R hatL hatR chord1L chord1R chord2L chord2R chord3L chord3R chord4L
+chord4R cymbalL cymbalR hat2L hat2R hatL hatR hi_note1L hi_note1R hi_note2L
+ni_note2R hi_note3L hi_note3R hi_note4L hi_note4R hi_note5L hi_note5R
+hi_note6L hi_note6R hi_note7L hi_note7R hi_note8L hi_note8R hit1L hit1R
+hit2L hit2R kickL kickR low_note1L low_note1R low_note2L low_note2R
+low_note3L low_note3R low_note4L low_note4R melodyL melodyR snareL
+snareR snareRushL snareRushR percL percR;
+#X obj 132 101 table percL;
+#X obj 132 129 table percR;
+#X connect 0 0 60 0;
+#X connect 60 0 1 0;
