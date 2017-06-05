@@ -7,6 +7,8 @@ import netP5.*;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
+PShape blueLentil;
+
 String[][] imageNames = {
                           {"yellow_200.png", "yellow_100.png", "yellow_150.png"},
                           {"blue_200.png", "blue_100.png", "blue_150.png"},
@@ -47,6 +49,8 @@ void setup (){
   //fullScreen(1);
   size (1920, 1080); // Size of background
   background (249,194,10); // Background color
+  
+  blueLentil = loadShape("bluetest.svg");
   
   for (int i = 0; i < bgCircles.length; i++){ //prep the circles
     int c = int(random(5)+1);
@@ -298,7 +302,8 @@ class BgCircle implements Comparable<BgCircle>{
     }
       color c = color(screenColors[bgCircleColor][0], screenColors[bgCircleColor][1], screenColors[bgCircleColor][2]);
       fill(c, alpha);
-      ellipse (x, y, currentSize, currentSize);
+      //ellipse (x, y, currentSize, currentSize);
+      shape(blueLentil, x, y, bgCircleSize, bgCircleSize);
       oldx = x; //log our last circle
       oldy = y;
       age++;
