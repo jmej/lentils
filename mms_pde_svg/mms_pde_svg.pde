@@ -7,9 +7,9 @@ import netP5.*;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
-String[] imageNames = {"yellow_600.png", "blue_600.png", "red_600.png", "green_600.png", "brown_600.png", "orange_600.png"};
+String[] imageNames = {"yellow.svg", "blue.svg", "red.svg", "green.svg", "brown.svg", "orange.svg"};
 
-PImage[] colors = new PImage[6];
+PShape[] colors = new PShape[6];
 int[] lentilSizes = {50, 100, 150}; //needs to be the 3 sizes of lentils in px
 
 Lentil[][] lentils = new Lentil[6][10]; //each sub array will get filled with lentil instances
@@ -55,7 +55,7 @@ void setup (){
       lentils[c][i] = new Lentil(c, 100, width, height, randomlySignedFloat(5, 20), randomlySignedFloat(5, 20), 0);
     }
     String imageName = imageNames[c];
-    colors[c] = loadImage(imageName);
+    colors[c] = loadShape(imageName);
   }
   frameRate(24);
 }
@@ -98,27 +98,27 @@ void draw (){
   background (screenRed,screenGreen,screenBlue); // Background color
   
   //background circles stuff
-  //Arrays.sort(bgCircles); // puts bgCircles into oldest to youngest order so newest circles get drawn on top
+  Arrays.sort(bgCircles); // puts bgCircles into oldest to youngest order so newest circles get drawn on top
   
   //if (millis() - triggerTimer > 8000){ //if 5 seconds have passed since last trigger start attract mode
-  //  for (int i = 0; i < bgCircles.length; i++){
-  //    bgCircles[i].trigger = true;
-  //    if ((millis() - triggerTimer) < 15000){
-  //      float timeSinceTrig = int(millis() - triggerTimer);
-  //      bgCircles[i].age = int(map(timeSinceTrig, 8000, 15000, 180, 8)); //trick to fade circles back in
-  //    }else{
-  //    bgCircles[i].age = 8;
-  //    }
-  //    //triggerTimer = millis();
-  //  }
+    for (int i = 0; i < bgCircles.length; i++){
+      bgCircles[i].trigger = true;
+      //if ((millis() - triggerTimer) < 15000){
+      //  float timeSinceTrig = int(millis() - triggerTimer);
+      //  bgCircles[i].age = int(map(timeSinceTrig, 8000, 15000, 180, 8)); //trick to fade circles back in
+      //}else{
+      bgCircles[i].age = 8;
+      //}
+      //triggerTimer = millis();
+    }
     
   //}
-  //for (int i = 0; i < bgCircles.length; i++){
-  //  if (bgCircles[i].trigger){
-  //    bgCircles[i].move();
-  //    bgCircles[i].display();
-  //  }
-  //}
+  for (int i = 0; i < bgCircles.length; i++){
+    if (bgCircles[i].trigger){
+      bgCircles[i].move();
+      bgCircles[i].display();
+    }
+  }
   for (int t = 0; t < triggers.length; t++){
     if (triggers[t]){
       for (int i = 0; i < lentils[t].length; i++){
@@ -237,17 +237,17 @@ class Lentil {
   void display(){
     float displaySize = 0;
     //displaySize = map(age, 0, 30, lentilSize*2, lentilSize);
-    if (age <= 4){
-      displaySize = map(age, 0, 4, lentilSize*0.5, lentilSize*2);
+    if (age <= 2){
+      displaySize = map(age, 0, 2, lentilSize*0.5, lentilSize*2);
     }
-    if (age > 4){
+    if (age > 2){
       if (age < 8){
-        displaySize = map(age, 5, 8, lentilSize*2, lentilSize);
+        displaySize = map(age, 3, 8, lentilSize*2, lentilSize);
       }else{ //if lentil is over a certain age
         displaySize = map(age, 8, 150, lentilSize, lentilSize*0.25);
       }
     }
-    image (colors[lentilColor], x, y, displaySize, displaySize);
+    shape (colors[lentilColor], x, y, displaySize, displaySize);
     oldx = x; //log our last lentil
     oldy = y;
     age++;
