@@ -10,11 +10,12 @@ NetAddress myRemoteLocation;
 String[] imageNames = {"yellow.svg", "blue.svg", "red.svg", "green.svg", "brown.svg", "orange.svg"};
 
 PShape[] colors = new PShape[6];
-int[] lentilSizes = {50, 100, 150}; //needs to be the 3 sizes of lentils in px
+int[] lentilSizes = {100, 200, 300}; //needs to be the 3 sizes of lentils in px
 
-Lentil[][] lentils = new Lentil[6][10]; //each sub array will get filled with lentil instances
-BgCircle[] bgCircles = new BgCircle[30];
+Lentil[][] lentils = new Lentil[6][20]; //each sub array will get filled with lentil instances
+BgCircle[] bgCircles = new BgCircle[5];
 int circleCounter = 0;
+int lastCircleColor;
 
 boolean[] triggers = new boolean[6];
 
@@ -101,16 +102,16 @@ void draw (){
   Arrays.sort(bgCircles); // puts bgCircles into oldest to youngest order so newest circles get drawn on top
   
   //if (millis() - triggerTimer > 8000){ //if 5 seconds have passed since last trigger start attract mode
-    for (int i = 0; i < bgCircles.length; i++){
-      bgCircles[i].trigger = true;
+    //for (int i = 0; i < bgCircles.length; i++){
+    //  bgCircles[i].trigger = true;
       //if ((millis() - triggerTimer) < 15000){
       //  float timeSinceTrig = int(millis() - triggerTimer);
       //  bgCircles[i].age = int(map(timeSinceTrig, 8000, 15000, 180, 8)); //trick to fade circles back in
       //}else{
-      bgCircles[i].age = 8;
+      //bgCircles[i].age = 8;
       //}
       //triggerTimer = millis();
-    }
+    //}
     
   //}
   for (int i = 0; i < bgCircles.length; i++){
@@ -153,16 +154,21 @@ float randomlySignedFloat(float a, float b){
 }
 
 void retrigLentils(int lentilColor){
-    
+    int newColor = (lentilColor+1)%6;
+    if ((lentilColor+1)%6 == lastCircleColor){ //make sure we aren't using the same circle color as last trigger
+      newColor = (lentilColor+2)%6;
+    }
+    lastCircleColor = newColor;
     triggers[lentilColor] = true;
-    float newX = random(lentilSizes[2], width - lentilSizes[2]); //random size 1 big lentil away from edges
-    float newY = random(lentilSizes[2], height - lentilSizes[2]);
-    //circleCounter++;
-    //int circleCount = circleCounter % bgCircles.length;
-    //bgCircles[circleCount].trigger = true;
-    //bgCircles[circleCount].x = newX;
-    //bgCircles[circleCount].y = newY;
-    //bgCircles[circleCount].age = 0;
+    float newX = random((lentilSizes[2]), width - (lentilSizes[2])); //random size 1 big lentil away from edges
+    float newY = random((lentilSizes[2]), height - (lentilSizes[2]));
+    circleCounter++;
+    int circleCount = circleCounter % bgCircles.length;
+    bgCircles[circleCount].trigger = true;
+    bgCircles[circleCount].x = newX;
+    bgCircles[circleCount].y = newY;
+    bgCircles[circleCount].age = 0;
+    bgCircles[circleCount].drawColor = newColor;
    
     for (int i = 0; i < lentils[0].length; i++){
       float newXspeed = randomlySignedFloat(5, 20);
@@ -238,13 +244,13 @@ class Lentil {
     float displaySize = 0;
     //displaySize = map(age, 0, 30, lentilSize*2, lentilSize);
     if (age <= 2){
-      displaySize = map(age, 0, 2, lentilSize*0.5, lentilSize*5);
+      displaySize = map(age, 0, 2, lentilSize*0.5, lentilSize*3);
     }
     if (age > 2){
       if (age < 8){
-        displaySize = map(age, 3, 8, lentilSize*5, lentilSize);
+        displaySize = map(age, 3, 8, lentilSize*3, lentilSize);
       }else{ //if lentil is over a certain age
-        displaySize = map(age, 8, 150, lentilSize, lentilSize*0.25);
+        displaySize = lentilSize;
       }
     }
     shape (colors[lentilColor], x-displaySize, y-displaySize, displaySize, displaySize);
@@ -260,6 +266,7 @@ class BgCircle implements Comparable<BgCircle>{
   float x, y, xspeed, yspeed, oldx, oldy;
   int age;
   boolean trigger;
+  int drawColor;
   
   int compareTo(BgCircle o){ 
     int compareAge = o.age;
@@ -292,19 +299,14 @@ class BgCircle implements Comparable<BgCircle>{
     //if (age == 0){
     //  bgCircleColor = int(random(4))+1; //for random colors excluding yellow
     //}
+    //background(249, 194, 10);
     if (age < 180){ //~5 seconds
       noStroke();
-      //float alpha = map(age, 0, 180, 255, 0);
-      float currentSize = bgCircleSize;
-      if (age < 3){
-        currentSize = map(age, 0, 3, 0, bgCircleSize+(bgCircleSize/4)); //genie up
-      }
-      if (age > 3 && age < 8){
-        currentSize = map(age, 3, 8, bgCircleSize+(bgCircleSize/4), bgCircleSize); //genie down
-    }
-      //color c = color(screenColors[bgCircleColor][0], screenColors[bgCircleColor][1], screenColors[bgCircleColor][2]);
-      //fill(c, alpha);
-      shape (colors[bgCircleColor], x-(currentSize*0.5), y-(currentSize*0.5), currentSize, currentSize);
+      float currentSize = 0;
+      currentSize = map(age, 0, 30, 0, width*2); //genie up
+      color c = color(screenColors[drawColor][0], screenColors[drawColor][1], screenColors[drawColor][2]);
+      fill(c, 255);
+      ellipse (x, y, currentSize, currentSize);
       oldx = x; //log our last circle
       oldy = y;
       age++;
