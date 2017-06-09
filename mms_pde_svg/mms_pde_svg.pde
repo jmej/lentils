@@ -13,7 +13,7 @@ PShape[] colors = new PShape[6];
 int[] lentilSizes = {50, 100, 150}; //needs to be the 3 sizes of lentils in px
 
 Lentil[][] lentils = new Lentil[6][10]; //each sub array will get filled with lentil instances
-BgCircle[] bgCircles = new BgCircle[8];
+BgCircle[] bgCircles = new BgCircle[30];
 int circleCounter = 0;
 
 boolean[] triggers = new boolean[6];
@@ -157,12 +157,12 @@ void retrigLentils(int lentilColor){
     triggers[lentilColor] = true;
     float newX = random(lentilSizes[2], width - lentilSizes[2]); //random size 1 big lentil away from edges
     float newY = random(lentilSizes[2], height - lentilSizes[2]);
-    circleCounter++;
-    int circleCount = circleCounter % bgCircles.length;
-    bgCircles[circleCount].trigger = true;
-    bgCircles[circleCount].x = newX;
-    bgCircles[circleCount].y = newY;
-    bgCircles[circleCount].age = 0;
+    //circleCounter++;
+    //int circleCount = circleCounter % bgCircles.length;
+    //bgCircles[circleCount].trigger = true;
+    //bgCircles[circleCount].x = newX;
+    //bgCircles[circleCount].y = newY;
+    //bgCircles[circleCount].age = 0;
    
     for (int i = 0; i < lentils[0].length; i++){
       float newXspeed = randomlySignedFloat(5, 20);
@@ -238,16 +238,16 @@ class Lentil {
     float displaySize = 0;
     //displaySize = map(age, 0, 30, lentilSize*2, lentilSize);
     if (age <= 2){
-      displaySize = map(age, 0, 2, lentilSize*0.5, lentilSize*2);
+      displaySize = map(age, 0, 2, lentilSize*0.5, lentilSize*5);
     }
     if (age > 2){
       if (age < 8){
-        displaySize = map(age, 3, 8, lentilSize*2, lentilSize);
+        displaySize = map(age, 3, 8, lentilSize*5, lentilSize);
       }else{ //if lentil is over a certain age
         displaySize = map(age, 8, 150, lentilSize, lentilSize*0.25);
       }
     }
-    shape (colors[lentilColor], x, y, displaySize, displaySize);
+    shape (colors[lentilColor], x-displaySize, y-displaySize, displaySize, displaySize);
     oldx = x; //log our last lentil
     oldy = y;
     age++;
@@ -294,7 +294,7 @@ class BgCircle implements Comparable<BgCircle>{
     //}
     if (age < 180){ //~5 seconds
       noStroke();
-      float alpha = map(age, 0, 180, 255, 0);
+      //float alpha = map(age, 0, 180, 255, 0);
       float currentSize = bgCircleSize;
       if (age < 3){
         currentSize = map(age, 0, 3, 0, bgCircleSize+(bgCircleSize/4)); //genie up
@@ -302,9 +302,9 @@ class BgCircle implements Comparable<BgCircle>{
       if (age > 3 && age < 8){
         currentSize = map(age, 3, 8, bgCircleSize+(bgCircleSize/4), bgCircleSize); //genie down
     }
-      color c = color(screenColors[bgCircleColor][0], screenColors[bgCircleColor][1], screenColors[bgCircleColor][2]);
-      fill(c, alpha);
-      ellipse (x, y, currentSize, currentSize);
+      //color c = color(screenColors[bgCircleColor][0], screenColors[bgCircleColor][1], screenColors[bgCircleColor][2]);
+      //fill(c, alpha);
+      shape (colors[bgCircleColor], x-(currentSize*0.5), y-(currentSize*0.5), currentSize, currentSize);
       oldx = x; //log our last circle
       oldy = y;
       age++;
