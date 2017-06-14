@@ -7,6 +7,9 @@ import netP5.*;
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
+String footer = "®/ ™ Trademarks © Mars, Incorporated 2017.";
+PFont helvetica;
+
 String[][] imageNames = {
                           {"yellow_200.png", "yellow_100.png", "yellow_150.png"},
                           {"blue_200.png", "blue_100.png", "blue_150.png"},
@@ -51,10 +54,10 @@ void setup (){
   myRemoteLocation = new NetAddress("127.0.0.1",12000);
   oscP5.plug(this,"podium","/podium");
 
-  //fullScreen(1);
-  size (1920, 1080); // Size of background
+  fullScreen(1);
+  //size (1920, 1080); // Size of background
   background (249,194,10); // Background color
-  
+  helvetica = loadFont("HelveticaNeue-Bold-24.vlw"); //tools - generate font to change size
   for (int i = 0; i < bgCircles.length; i++){ //prep the circles
     float circleSize = random(500)+500;
     float circleX = random(circleSize, width-circleSize);
@@ -163,7 +166,9 @@ void draw (){
   //println("redTimer is: "+timers[0]);
   }
 
-  
+  textFont(helvetica);
+  fill(0);
+  text(footer, width-(width*0.275), height-(height*0.01));
   screenTimer++;
   
 }
@@ -339,7 +344,7 @@ class BgCircle implements Comparable<BgCircle>{
     }
     if (age < 180){ //~5 seconds
       noStroke();
-      float alpha = map(age, 0, 180, 255, 0);
+      //float alpha = map(age, 0, 180, 255, 0);
       float currentSize = 0;
       currentSize = map(age, 0, 30, 0, width*2); //genie up
       color c = color(screenColors[bgCircleColor][0], screenColors[bgCircleColor][1], screenColors[bgCircleColor][2]);
