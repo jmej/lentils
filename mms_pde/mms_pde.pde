@@ -24,6 +24,8 @@ String[] attractImageNames = {"yellow_600.png", "blue_600.png", "red_600.png", "
 PImage[][] colors = new PImage[6][3];
 PImage[] attractImages = new PImage[6];
 
+Boolean[] theDrop = new Boolean[2];
+
 int[] lentilSizes = {50, 100, 150}; //needs to be the sizes of lentils in px
 
 Lentil[][] lentils = new Lentil[6][20]; //each sub array will get filled with lentil instances
@@ -58,6 +60,10 @@ void setup (){
   //size (1920, 1080); // Size of background
   background (249,194,10); // Background color
   helvetica = loadFont("HelveticaNeue-Bold-24.vlw"); //tools - generate font to change size
+  
+  theDrop[0] = false;
+  theDrop[1] = false;
+  
   for (int i = 0; i < bgCircles.length; i++){ //prep the circles
     float circleSize = random(500)+500;
     float circleX = random(circleSize, width-circleSize);
@@ -120,6 +126,18 @@ public void podium(float arg) { //OSC triggers
     beatCount++;
     triggerTimer = millis();
   }
+  if (arg == 11.0){
+    theDrop[0] = true;
+  }
+  if (arg == 12.0){
+    theDrop[0] = false;
+  }
+  if (arg == 13.0){
+    theDrop[1] = true;
+  }
+  if (arg == 14.0){
+    theDrop[1] = false;
+  }
 }
 
 void resetAttract(){
@@ -148,6 +166,20 @@ void draw (){
       bgCircles[i].display();
     }
   }
+  //strobe mode
+  
+  if (theDrop[0]){
+    background (screenRed,screenGreen,screenBlue); //how can this color stick until the next time theDrop[0] goes false?
+  }
+  
+  if (theDrop[1]){
+    int newColor = int(random(6));
+    screenRed = screenColors[newColor][0];
+    screenGreen = screenColors[newColor][1];
+    screenBlue = screenColors[newColor][2];
+    background (screenRed,screenGreen,screenBlue);
+  }
+  
   for (int t = 0; t < triggers.length; t++){
     if (triggers[t]){
       for (int i = 0; i < lentils[t].length; i++){
