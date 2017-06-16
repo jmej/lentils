@@ -59,7 +59,7 @@ void setup (){
   fullScreen(1);
   //size (1920, 1080); // Size of background
   background (249,194,10); // Background color
-  helvetica = loadFont("HelveticaNeue-Bold-24.vlw"); //tools - generate font to change size
+  helvetica = loadFont("HelveticaNeue-Light-24.vlw"); //tools - generate font to change size
   
   theDrop[0] = false;
   theDrop[1] = false;
@@ -199,7 +199,7 @@ void draw (){
   }
 
   textFont(helvetica);
-  fill(0);
+  fill(255);
   text(footer, width-(width*0.275), height-(height*0.01));
   screenTimer++;
   
